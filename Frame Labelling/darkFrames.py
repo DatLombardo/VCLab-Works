@@ -11,7 +11,7 @@ SIGMA = 0.097
 img = np.float32(cv2.imread('darkLabel.jpg'))
 
 #Normalize to 0.0 - 1.0
-image = m / 255.0
+image = img / 255.0
 
 #Determine Darkness coefficient Y = mean(RED * R + GREEN * G + BLUE * B)
 Y = ((image[:,:,0].mean() * BLUE ) +

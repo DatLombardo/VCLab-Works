@@ -34,3 +34,6 @@ option = {
 }
 tfnet = TFNet(option)
 ```
+
+For More Setup Information:
+<a href="https://github.com/markjay4k/YOLO-series/blob/master/part1%20-%20setup%20YOLO.ipynb">&emsp;Click Here</a>

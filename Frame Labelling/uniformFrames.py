@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 Y = 0.2
 
 #Image import
-img = cv2.imread('uniformLabel.jpg')
+img = cv2.imread('../Testing Data/uniformLabel.jpg')
 
 #Convert image to gray & Convert to float32
 gray_image =  np.float32(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))

@@ -8,7 +8,7 @@ BLUE = 0.0722
 SIGMA = 0.097
 
 #Image import & Convert image to float32
-img = np.float32(cv2.imread('darkLabel.jpg'))
+img = np.float32(cv2.imread('../Testing Data/darkLabel.jpg'))
 
 #Normalize to 0.0 - 1.0
 image = img / 255.0
@@ -22,4 +22,3 @@ Y = ((image[:,:,0].mean() * BLUE ) +
 if (Y <= SIGMA):
     print("Frame is classified as dark.")
 print("Computed Y Value: " + str(Y))
-

@@ -5,7 +5,7 @@ import numpy as np
 BETA = 502.32
 
 #Image import
-img = cv2.imread('blurryLabel.jpg')
+img = cv2.imread('../Testing Data/blurryLabel.jpg')
 
 #Convert image to gray & Convert to float32
 gray_image = np.float32(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))

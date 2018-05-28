@@ -70,6 +70,22 @@ def uniformLabel(frame):
 
     return round(U, 5)
 
+def HSVMean(frame):
+    #Convert to HSV colour space
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    height, width, channels = frame.shape
+
+    #Take dimensions for the center of the frame
+    upper_left = (int(width / 3), int(height / 3))
+    bottom_right = (int(width * 2 / 3), int(height * 2 / 3))
+    centerFrame = hsv[upper_left[1] : bottom_right[1], upper_left[0] : bottom_right[0]]
+
+    #Take the slice of each column of H,S,V and take the average
+    imageMeanHSV = hsv[:,:,0].mean(), hsv[:,:,1].mean(), hsv[:,:,2].mean()
+    centerMeanHSV = centerFrame[:,:,0].mean(), centerFrame[:,:,1].mean(), centerFrame[:,:,2].mean()
+    return imageMeanHSV, centerMeanHSV
+
+
 tfnet = TFNet(option)
 
 #Load mp4 file
@@ -89,8 +105,10 @@ while (capture.isOpened()):
     ret, currFrame = capture.read()
     if ret:
         frameObjects = []
-        #Yolo Object Detection
 
+        imageHSV, centerHSV = HSVMean(currFrame)
+        values = frameLabel(np.float32(currFrame))
+        #Yolo Object Detection
         results = tfnet.return_predict(currFrame)
         for colour, result in zip(colours, results):
             #Extract X,Y Position of Top-Left Bounding Box, Bottom-Right Bounding Box
@@ -101,10 +119,8 @@ while (capture.isOpened()):
             #Generate Object list, [label, confidence, top-left bb, bottom-right bb]
             frameObjects.append([result['label'], result['confidence'], tl, br])
 
-        values = frameLabel(np.float32(currFrame))
-
-        #Dark (Y) [0], Blurry (S) [1], Uniform (U) [2], #Detected Objects, Object list
-        frameCollection.append([currFrame, values[0], values[1], values[2], len(frameObjects), frameObjects])
+        #Dark (Y) [0], Blurry (S) [1], Uniform (U) [2], Image Mean HSV, Center Image Mean HSV, #Detected Objects, Object list
+        frameCollection.append([currFrame, values[0], values[1], values[2], imageHSV, centerHSV, len(frameObjects), frameObjects])
 
         #Add frame labelling values to display,
         cv2.putText(currFrame,"Dark(Y) =" + str(values[0]),(x,y),font,0.5,(255,246,0),1)

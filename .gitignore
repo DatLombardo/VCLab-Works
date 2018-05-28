@@ -20,3 +20,5 @@
 /Feature-Extraction/video.avi
 /Feature-Extraction/README.md
 /Feature-Extraction/setup.py
+/Feature-Extraction/.coveragerc
+/Feature-Extraction/.gitignore

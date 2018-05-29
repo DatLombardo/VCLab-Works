@@ -91,6 +91,8 @@ tfnet = TFNet(option)
 #Load mp4 file
 capture = cv2.VideoCapture('../Testing-Data/leaves_jumping.mp4')
 #capture = cv2.VideoCapture("../Testing-Data/playing_ball.mp4")
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi',fourcc, 20.0, (720,486))
 colours = [tuple(255 * np.random.rand(3)) for i in range(5)]
 
 #Definition of empty container for frame / label storage
@@ -126,9 +128,9 @@ while (capture.isOpened()):
         cv2.putText(currFrame,"Dark(Y) =" + str(values[0]),(x,y),font,0.5,(255,246,0),1)
         cv2.putText(currFrame,"Blurry(S) =" + str(values[1]),(x,y+20),font,0.5,(255,246,0),1)
         cv2.putText(currFrame,"Uniform(U) =" + str(values[2]),(x,y+40),font,0.5,(255,246,0),1)
-
+        out.write(currFrame)
         #Display current frame
-        cv2.imshow('frame', currFrame)
+        #cv2.imshow('frame', currFrame)
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
     else:

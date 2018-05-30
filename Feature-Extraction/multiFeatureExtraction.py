@@ -93,7 +93,7 @@ def getFeatures(dir, filename):
     capWidth = capture.get(cv2.CAP_PROP_FRAME_WIDTH)
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter("outVideos/"+filename+'.avi',fourcc, 20.0, (int(capWidth),int(capHeight)))
+    out = cv2.VideoWriter("outVideos/"+filename[0:len(filename)-4]+'.avi',fourcc, 20.0, (int(capWidth),int(capHeight)))
     colours = [tuple(255 * np.random.rand(3)) for i in range(5)]
     #Definition of empty container for frame / label storage
     frameCollection = []
@@ -155,12 +155,16 @@ def getFeatures(dir, filename):
 
     featureFile.close()
 
-
+start = time.time()
 tfnet = TFNet(option)
-
-for filename in os.listdir('/home/michael/Desktop/VCLab Summer18/Testing-Data/Subset/SumMe'):
+    #/home/lombardo/Desktop/Testing-Data/Subset     - Workstation
+    #/home/michael/Desktop/VCLab Summer18/Testing-Data/Subset   - Personal
+for filename in os.listdir('/home/lombardo/Desktop/Testing-Data/Subset/SumMe'):
     getFeatures("SumMe",filename)
     print("done")
-for filename in os.listdir('/home/michael/Desktop/VCLab Summer18/Testing-Data/Subset/TVSUM50'):
+for filename in os.listdir('/home/lombardo/Desktop/Testing-Data/Subset/TVSUM50'):
     getFeatures("TVSUM50",filename)
     print("done~")
+end = time.time()
+print(start)
+print(end)

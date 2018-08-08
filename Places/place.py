@@ -5,7 +5,8 @@ from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
 from keras.optimizers import SGD
-import cv2, numpy as np
+import cv2
+import numpy as np
 import pickle
 import sys
 
@@ -14,7 +15,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth=True
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
-	
+
 # Source for vgg16 implementation : https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3
 
 model = None
@@ -70,7 +71,7 @@ def VGG_16(weights_path=None):
 	model.compile(optimizer=sgd, loss='categorical_crossentropy')
 	return model
 
-
+'''
 def predict(img_path, ret_dict):
 	global model
 	global labels
@@ -88,7 +89,25 @@ def predict(img_path, ret_dict):
 		results.append(labels[x])
 	ret_dict['place'] = results[:5]
 	return results[:5]
+'''
 
+def predict(im):
+	global model
+	global labels
+	ret_dict = {}
+	im[:,:,0] -= 103.939
+	im[:,:,1] -= 116.779
+	im[:,:,2] -= 123.68
+	im = im.transpose((2,0,1))
+	im = np.expand_dims(im, axis=0)
+	# Test pretrained model
+	out = model.predict(im)
+	out  = reversed(np.argsort(out)[0])
+	results = []
+	for x in out:
+		results.append(labels[x])
+	ret_dict['place'] = results[:5]
+	return results[:5]
 
 def init():
 	global model
@@ -101,8 +120,16 @@ def init():
 init()
 print "Loaded place module"
 
-if __name__ == "__main__":
-	im_name = sys.argv[1]
-	ret_dict = {}
-	z = predict(im_name, ret_dict)
-	print z[:5]
+#cap = cv2.VideoCapture("../Testing-Data/playing_ball.mp4")
+cap = cv2.VideoCapture("../Testing-Data/river_crossing.mp4")
+#cap = cv2.VideoCapture("../Testing-Data/leaves_jumping.mp4")
+while (cap.isOpened()):
+	ret, currFrame = cap.read()
+	if ret == True:
+		parsedFrame = cv2.resize(np.float32(currFrame), (224,224))
+		z = predict(parsedFrame)
+		print z[:5]
+		if cv2.waitKey(25) & 0xFF == ord('q'):
+		  break
+	else:
+		break
